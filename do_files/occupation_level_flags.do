@@ -105,7 +105,7 @@ gen ba_flag2 = ba_flag1 & baf2_cond1 & baf2_cond2
 * some flag 2 *
 ***************
 *1. If some share in occ is less than combined some share of Some/BA/Grad combined
-*and median inside of the occ is at least 30% greater than the some median in that occ for that gender
+*and median inside of the occ is at least 20% greater than the some median in that occ for that gender
 
 *The logic here is to identify jobs where a person with one education level is working in an occ in which has a disproportionate share of those with higher levels of education.
 
@@ -123,7 +123,7 @@ gen some_flag2 = some_flag1 & sf2_cond1 & sf2_cond2
 * hs flag 2 *
 *************
 *1. If HS share in occ is less than combined HS share of HS/Some/BA/Grad combined
-*and Some median inside of the occ is at least 30% greater than the HS median in that occ for that gender
+*and Some median inside of the occ is at least 20% greater than the HS median in that occ for that gender
 
 gen hsf2_cond1 = (occ_hs_share / occ_hs_above_share) < (econ_hs_share / econ_hs_above_share)
 
