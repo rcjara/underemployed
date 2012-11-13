@@ -16,13 +16,34 @@ drop _merge
 ************************
 tempfile accumulator
 
+*economy totals
+preserve
+
+collapse (rawsum) pop=wgt (median) earnings [pw=wgt], by(educ6)
+
+gen qualified = 0
+reshape wide pop earnings, i(qualified) j(educ6)
+
+gen order = 0
+gen status = "Economy Total"
+
+order order status qualified pop* earnings*
+
+save `accumulator', replace
+
+restore
+
+*ba status
 preserve
 
 gen_status_var ba_lf_status ba_flag
 reshape_by_educ6 1 ba_lf_status
+append using `accumulator'
 save `accumulator', replace
 
 restore
+
+*grad status
 preserve
 
 gen grad_lf_status = 1
@@ -33,6 +54,8 @@ append using `accumulator'
 save `accumulator', replace
 
 restore
+
+*some college status
 preserve
 
 gen_status_var some_lf_status some_flag
@@ -41,6 +64,8 @@ append using `accumulator'
 save `accumulator', replace
 
 restore
+
+*high school status
 preserve
 
 gen_status_var hs_lf_status hs_flag
@@ -49,6 +74,8 @@ append using `accumulator'
 save `accumulator', replace
 
 restore
+
+*AA status
 
 gen aa_lf_status = 1
 replace aa_lf_status = 3 if some_flag1 & educ6 == 4
@@ -78,6 +105,7 @@ label var earnings6 "Graduate Degree"
 
 capture label drop qualified_lbl
 label define qualified_lbl ///
+  0 "" ///
   1 "Overqualified" ///
   2 "Underqualified" ///
   3 "Rightly Qualified"
