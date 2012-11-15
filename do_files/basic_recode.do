@@ -30,8 +30,10 @@ label define educ5_lbl ///
   5 "Advanced Degree"
 label values educ5 educ5_lbl
 
+*mvdecode incwage incbus incfarm, mv(999998/999999 = .)
+*egen earnings = rowtotal(incwage incbus incfarm)
 mvdecode incwage, mv(999998/999999 = .)
-rename incwage earnings
+gen earnings = incwage
 
 gen p_year = year - 1
 label var p_year "Previous Year (the year for which earnings refer)"
@@ -54,5 +56,5 @@ assert !missing(hrs_worked)
 gen hrs_worked2 = cond(hrs_worked > 3500, 3500, hrs_worked)
 
 rename wtsupp wgt
-keep year wgt pernum age sex race4 educ5 educ6 earnings occ ind classwkr hrs_worked hrs_worked2
+keep year wgt pernum age sex race4 educ5 educ6 inc* oincbus earnings occ ind classwkr hrs_worked hrs_worked2
 
