@@ -33,14 +33,15 @@ foreach scope of local scopes {
 *or 2.  BA/Grad in share in occ  greater than BA/Grad share for economy as a whole for that gender and grad earnings at lest 30% greater than BA earnings in that occ
 *or 3. in remaining occupations, if grad median is greater than 90% of overall grad median for that gender and 15% higher than BA median in that occ
 
-gen gf1_cond1 = occ_higher_ed_share > econ_higher_ed_share ///
+gen gf1_cond1 = !missing(occ_grad_share) & occ_higher_ed_share > econ_higher_ed_share ///
                 & occ_grad_share_of_higher_ed > econ_grad_share_of_higher_ed
 
-gen gf1_cond2 = !missing(occ_ba_share) ///
+gen gf1_cond2 = !missing(occ_grad_share) & !missing(occ_ba_share) ///
                 & occ_higher_ed_share > econ_higher_ed_share ///
                 & occ_grad_earnings > (occ_ba_earnings * 1.3)
 
-gen gf1_cond3 = occ_grad_earnings > (econ_grad_earnings * 0.9) ///
+gen gf1_cond3 = !missing(occ_grad_share) & !missing(occ_ba_share) ///
+                & occ_grad_earnings > (econ_grad_earnings * 0.9) ///
                 & occ_grad_earnings > (occ_ba_earnings * 1.15)
 
 gen grad_flag1 = !missing(occ_grad_share) & (gf1_cond1 | gf1_cond2 | gf1_cond3)
@@ -51,10 +52,10 @@ gen grad_flag1 = !missing(occ_grad_share) & (gf1_cond1 | gf1_cond2 | gf1_cond3)
 *1. BA plus Grad in share in occ  greater than BA/Grad share for economy as a whole for that gender
 *or 2. in remaining occupations, if BA median in that occ is greater than 90% of overall BA median for that gender and 15% higher than some college median in that occ
 
-gen bf1_cond1 = occ_higher_ed_share > econ_higher_ed_share
+gen bf1_cond1 = !missing(occ_ba_share) & occ_higher_ed_share > econ_higher_ed_share
 
-gen bf1_cond2 = !missing(occ_sc_share) ///
-                & occ_ba_earnings > econ_ba_earnings ///
+gen bf1_cond2 = !missing(occ_ba_share) & !missing(occ_sc_share) ///
+                & occ_ba_earnings > (econ_ba_earnings * 0.9) ///
                 & occ_ba_earnings > (occ_sc_earnings * 1.15)
 
 gen ba_flag1 = !missing(occ_ba_share) & (bf1_cond1 | bf1_cond2)
@@ -65,11 +66,11 @@ gen ba_flag1 = !missing(occ_ba_share) & (bf1_cond1 | bf1_cond2)
 *1. sum of shares of some college, BA and Grad in share in occ  greater than some/BA/Grad share for economy as a whole for that gender
 *or 2. in remaining occupations, if some median in that occ is greater than 90% of overall some median for that gender and 15% higher than HS only median in that occ
 
-gen sc1_cond1 = (occ_sc_share / occ_sc_above_share) > (econ_sc_share / econ_sc_above_share)
+gen sc1_cond1 = !missing(occ_sc_share) & occ_sc_above_share > econ_sc_above_share
 
-gen sc1_cond2 = !missing(occ_lhs_share) ///
+gen sc1_cond2 = !missing(occ_sc_share) & !missing(occ_lhs_share) ///
                 & occ_sc_earnings > (econ_sc_earnings * 0.9) ///
-                & occ_sc_earnings > (1.15 * occ_lhs_earnings)
+                & occ_sc_earnings > (occ_hs_earnings * 1.15)
 
 gen some_flag1 = !missing(occ_sc_share) & (sc1_cond1 | sc1_cond2)
 
@@ -79,9 +80,9 @@ gen some_flag1 = !missing(occ_sc_share) & (sc1_cond1 | sc1_cond2)
 *1. sum of shares of HS, some college, BA and Grad in share in occ  greater than HS/some/BA/Grad share for economy as a whole for that gender
 *or 2. in remaining occupations, if HS median in that occ is greater than 90% of overall HS median for that gender and 15% higher than HS dropout median in that occ
 
-gen hsf1_cond1 = occ_hs_above_share > econ_hs_above_share
+gen hsf1_cond1 = !missing(occ_lhs_share) & occ_hs_above_share > econ_hs_above_share
 
-gen hsf1_cond2 = !missing(occ_lhs_earnings) ///
+gen hsf1_cond2 = !missing(occ_lhs_share) & !missing(occ_lhs_earnings) ///
                  & occ_hs_earnings > (econ_hs_earnings * 0.9) ///
                  & occ_hs_earnings > (occ_lhs_earnings * 1.15)
 
@@ -127,7 +128,7 @@ gen some_flag2 = some_flag1 & sf2_cond1 & sf2_cond2
 
 gen hsf2_cond1 = (occ_hs_share / occ_hs_above_share) < (econ_hs_share / econ_hs_above_share)
 
-gen hsf2_cond2 = !missing(occ_lhs_earnings) ///
+gen hsf2_cond2 = !missing(occ_hs_earnings) ///
                  & occ_sc_earnings > (occ_hs_earnings * 1.2)
 
 gen hs_flag2 = hs_flag1 & hsf2_cond1 & hsf2_cond2
