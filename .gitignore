@@ -2,4 +2,4 @@ dta/*
 *.sw*
 .DS_Store
 predeliverables/*
-~$*
+~*
