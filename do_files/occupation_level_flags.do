@@ -133,6 +133,6 @@ gen hsf2_cond2 = !missing(occ_hs_earnings) ///
 
 gen hs_flag2 = hs_flag1 & hsf2_cond1 & hsf2_cond2
 
-local vars_to_keep occ grad_flag1 ba_flag1 some_flag1 hs_flag1 ba_flag2 some_flag2 hs_flag2
-keep  `vars_to_keep'
-order `vars_to_keep'
+*local vars_to_keep occ grad_flag1 ba_flag1 some_flag1 hs_flag1 ba_flag2 some_flag2 hs_flag2
+*keep  `vars_to_keep'
+*order `vars_to_keep'
